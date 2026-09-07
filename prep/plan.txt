@@ -1,0 +1,37 @@
+Title:
+
+All Things About bpvars, the R package for Forecasting with Bayesian Panel Vector Autoregressions
+
+About the speaker:
+
+Tomasz Woźniak is a Bayesian econometrician developing new econometric methods for applied macroeconomic research. He has been a specialised R user for eighteen years, and has recently joined The R Journal as an Associate Editor. He is the author of several R packages, available at https://bsvars.org/, that combine blazingly fast algorithms written in C++ with the convenience of data analysis in R. He works as a senior lecturer at the University of Melbourne, where he has an extensive research, teaching, and engagement portfolio. Tomasz supports Ukraine. Slava Ukrainie!
+
+Description:
+
+This session is a unique opportunity to learn to use the bpvars package for forecasting with Bayesian panel vector autoregressions in a wide range of applications spanning:
+
+* data preparation,
+* specification of panel vector autoregressions,
+* estimation of the models,
+* estimation with missing observations,
+* forecasting labour market outcomes globally,
+* plotting and reporting predictions of different qualities, including point and density forecasts, marginal, conditional, or restricted forecasts,
+* performing recursive expanding window forecasting,
+* generating forecasting performance reports.
+
+A sequence of hands-on exercises that fully prepares attendees to work with the package supports all of this. You are welcome to browse existing resources, including:
+
+* bpvars website: https://bsvars.org/bpvars/
+* bpvars CRAN profile: https://cran.r-project.org/package=bpvars
+* package vignette: https://doi.org/10.48550/arXiv.2606.14143
+* other materials: https://bsvars.org/bpvars/#resources
+See you soon!
+
+Preparation:
+
+This session assumes the attendees know the basics of time series analysis. Install and load the bpvars package, then check the documentation by running the code below. Run the example you will find there in R. If it works, you’re ready to go. Thanks!
+```
+install.packages("bpvars")
+library(bpvars)
+?bpvars
+```
