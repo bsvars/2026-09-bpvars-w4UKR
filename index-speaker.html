@@ -835,7 +835,7 @@ Frequency = 1
 <span id="cb15-3"><a href=""></a></span>
 <span id="cb15-4"><a href=""></a>spec <span class="ot">=</span> specify_bvarPANEL<span class="sc">$</span><span class="fu">new</span>(</span>
 <span id="cb15-5"><a href=""></a>  ilo_dynamic_panel[c_select],</span>
-<span id="cb15-6"><a href=""></a>  <span class="at">exogenous =</span> ilo_exogenous_variables</span>
+<span id="cb15-6"><a href=""></a>  <span class="at">exogenous =</span> ilo_exogenous_variables[c_select],</span>
 <span id="cb15-7"><a href=""></a>)</span>
 <span id="cb15-8"><a href=""></a></span>
 <span id="cb15-9"><a href=""></a>burn <span class="ot">=</span> <span class="fu">estimate</span>(spec, <span class="at">S =</span> <span class="dv">5000</span>, <span class="at">show_progress =</span> <span class="cn">FALSE</span>)</span>
@@ -844,9 +844,38 @@ Frequency = 1
 </section>
 <section id="panel-vars-8" class="slide level2" data-background-color="#FFD800">
 <h2>panel VARs</h2>
+<h3 style="color:#0056B9;" id="interpret-estimates-for-ur-for-ukr">interpret estimates for <span class="math inline">\(UR\)</span> for UKR</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>summ <span class="ot">=</span> <span class="fu">summary</span>(post)</span>
+<span id="cb16-2"><a href=""></a>summ<span class="sc">$</span>UKR<span class="sc">$</span>A<span class="sc">$</span>equation2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  mean         sd 5% quantile 95% quantile
+lag1_var1  -3.43352830  1.0796259 -5.23937549    -1.676313
+lag1_var2  -1.02888708  2.2100534 -4.86866367     2.108293
+lag1_var3  -2.88180818  3.7762614 -9.50579774     2.529160
+lag1_var4   2.61695033  3.4542109 -2.37450766     8.597676
+const     105.09458126 39.6885850 43.89327312   172.615999
+exo1        0.02717768  0.9128294 -1.44121092     1.530596
+exo2        1.44899089  0.8875617 -0.02103142     2.899750
+exo3        0.86629228  0.9207812 -0.63840569     2.353713</code></pre>
+</div>
+</div>
+</section>
+<section id="exercise-panel-vars" class="slide level2" data-background-color="#FFD800">
+<h2>Exercise: panel VARs</h2>
+<ol type="1">
+<li>Run <code>?specify_bvarPANEL</code> to get help for the specification function</li>
+<li>What is the lag order in the estimated model?</li>
+<li>What does argument <code>stationary</code> set?</li>
+<li>What is the role of argument <code>exogenous</code>?</li>
+<li>Run <code>?ilo_exogenous_variables</code> to see what’s in that data object.</li>
+</ol>
+</section>
+<section id="panel-vars-9" class="slide level2" data-background-color="#FFD800">
+<h2>panel VARs</h2>
 <h3 style="color:#0056B9;" id="specify-object">specify object</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>spec</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a>spec</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;BVARPANEL&gt;
   Public:
@@ -869,11 +898,59 @@ Frequency = 1
 </div>
 </div>
 </section>
-<section id="panel-vars-9" class="slide level2" data-background-color="#FFD800">
+<section id="panel-vars-10" class="slide level2" data-background-color="#FFD800">
+<h2>panel VARs</h2>
+<h3 style="color:#0056B9;" id="specify-object-exogenous-variables-for-ukr">specify object: exogenous variables for UKR</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href=""></a>ilo_exogenous_variables<span class="sc">$</span>UKR</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Time Series:
+Start = 1991 
+End = 2024 
+Frequency = 1 
+     2008 2020 2021
+1991    0    0    0
+1992    0    0    0
+1993    0    0    0
+1994    0    0    0
+1995    0    0    0
+1996    0    0    0
+1997    0    0    0
+1998    0    0    0
+1999    0    0    0
+2000    0    0    0
+2001    0    0    0
+2002    0    0    0
+2003    0    0    0
+2004    0    0    0
+2005    0    0    0
+2006    0    0    0
+2007    0    0    0
+2008    1    0    0
+2009    0    0    0
+2010    0    0    0
+2011    0    0    0
+2012    0    0    0
+2013    0    0    0
+2014    0    0    0
+2015    0    0    0
+2016    0    0    0
+2017    0    0    0
+2018    0    0    0
+2019    0    0    0
+2020    0    1    0
+2021    0    0    1
+2022    0    0    0
+2023    0    0    0
+2024    0    0    0</code></pre>
+</div>
+</div>
+</section>
+<section id="panel-vars-11" class="slide level2" data-background-color="#FFD800">
 <h2>panel VARs</h2>
 <h3 style="color:#0056B9;" id="specify-object-prior-mean">specify object: prior mean</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a>spec<span class="sc">$</span>prior<span class="sc">$</span>M</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a>spec<span class="sc">$</span>prior<span class="sc">$</span>M</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     [,1] [,2] [,3] [,4]
 [1,]    1    0    0    0
@@ -887,6 +964,217 @@ Frequency = 1
 </div>
 </div>
 </section>
+<section id="panel-vars-12" class="slide level2" data-background-color="#FFD800">
+<h2>panel VARs</h2>
+<h3 style="color:#0056B9;" id="featured-models">featured models</h3>
+<ul>
+<li>country-specific VARs with global prior</li>
+<li>country-specific VARs with global prior by <a href="https://doi.org/10.1002/jae.1082">Jarociński (2010, JAE)</a></li>
+<li>country-grouping VARs with global prior</li>
+<li>country-specific VARs with global prior grouping</li>
+<li>country-specific VARs</li>
+</ul>
+<h3 style="color:#1A003F;" id="featured-model-specifications">featured model specifications</h3>
+<ul>
+<li>VAR lag order modification</li>
+<li>exogenous variables</li>
+<li>constrained forecasting of rates</li>
+<li>prior hyper-parameters adjustment</li>
+<li>global prior mean set to pooled estimator by <a href="https://doi.org/10.1016/0304-4076(89)90036-5">Zellner, Hong (1989, JOE)</a></li>
+</ul>
+</section>
+<section id="panel-vars-13" class="slide level2" data-background-color="#FFD800">
+<h2>panel VARs</h2>
+<h3 style="color:#0056B9;" id="model-with-country-grouping">model with country grouping</h3>
+<p>Let each country belong to a group <span class="math inline">\(c\in g = \{1,\dots,G\}\)</span>.</p>
+<p>Country-specific parameters become group-specific parameters.</p>
+<p><span class="math display">\[\begin{align}
+&amp;\\
+        \mathbf{y}_{c.t} &amp;= \mathbf{A}_{g.1} \mathbf{y}_{c.t-1} + \mathbf{A}_{d.g}\mathbf{x}_{c.t} + \boldsymbol\epsilon_{c.t}\\[1ex]
+        \boldsymbol\epsilon_{c.t}\mid \mathbf{y}_{c.t-1} &amp; \sim N_4\left(\mathbf{0}_4, \boldsymbol\Sigma_g\right)\\[1ex]
+        E_\pi\left[\mathbf{A}_{g}\right] &amp;= \mathbf{A}\\[1ex]
+        E_\pi\left[\boldsymbol\Sigma_c\right] &amp;= \boldsymbol\Sigma\\
+\end{align}\]</span></p>
+</section>
+<section id="panel-vars-14" class="slide level2" data-background-color="#FFD800">
+<h2>panel VARs</h2>
+<h3 style="color:#0056B9;" id="model-with-country-grouping-1">model with country grouping</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a>c_select <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"UKR"</span>,<span class="st">"FRA"</span>,<span class="st">"ESP"</span>,<span class="st">"SWE"</span>,<span class="st">"NOR"</span>,</span>
+<span id="cb24-2"><a href=""></a>             <span class="st">"DEU"</span>,<span class="st">"FIN"</span>,<span class="st">"POL"</span>,<span class="st">"ITA"</span>,<span class="st">"GBR"</span>)</span>
+<span id="cb24-3"><a href=""></a></span>
+<span id="cb24-4"><a href=""></a>specg <span class="ot">=</span> bvarGroupPANEL<span class="sc">$</span><span class="fu">new</span>(</span>
+<span id="cb24-5"><a href=""></a>  ilo_dynamic_panel[c_select],</span>
+<span id="cb24-6"><a href=""></a>  <span class="at">exogenous =</span> ilo_exogenous_variables[c_select],</span>
+<span id="cb24-7"><a href=""></a>  <span class="at">group_allocation =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>)</span>
+<span id="cb24-8"><a href=""></a>)</span>
+<span id="cb24-9"><a href=""></a></span>
+<span id="cb24-10"><a href=""></a></span>
+<span id="cb24-11"><a href=""></a>burng <span class="ot">=</span> <span class="fu">estimate</span>(specg, <span class="at">S =</span> <span class="dv">5000</span>, <span class="at">show_progress =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb24-12"><a href=""></a>postg <span class="ot">=</span> <span class="fu">estimate</span>(burng, <span class="at">S =</span> <span class="dv">5000</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="panel-vars-15" class="slide level2" data-background-color="#FFD800">
+<h2>panel VARs</h2>
+<h3 style="color:#0056B9;" id="model-with-global-prior-grouping">model with global prior grouping</h3>
+<p>Let each country belong to a group <span class="math inline">\(c\in g = \{1,\dots,G\}\)</span>.</p>
+<p>Country-specific parameters have group-specific prior mean.</p>
+<p><span class="math display">\[\begin{align}
+&amp;\\
+        \mathbf{y}_{c.t} &amp;= \mathbf{A}_{c.1} \mathbf{y}_{c.t-1} + \mathbf{A}_{d.c}\mathbf{x}_{c.t} + \boldsymbol\epsilon_{c.t}\\[1ex]
+        \boldsymbol\epsilon_{c.t}\mid \mathbf{y}_{c.t-1} &amp; \sim N_4\left(\mathbf{0}_4, \boldsymbol\Sigma_c\right)\\[1ex]
+        E_\pi\left[\mathbf{A}_{c}\right] &amp;= \mathbf{A}_g\\[1ex]
+        E_\pi\left[\boldsymbol\Sigma_c\right] &amp;= \boldsymbol\Sigma_g\\
+\end{align}\]</span></p>
+</section>
+<section id="panel-vars-16" class="slide level2" data-background-color="#FFD800">
+<h2>panel VARs</h2>
+<h3 style="color:#0056B9;" id="model-with-global-prior-grouping-1">model with global prior grouping</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href=""></a>c_select <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"UKR"</span>,<span class="st">"FRA"</span>,<span class="st">"ESP"</span>,<span class="st">"SWE"</span>,<span class="st">"NOR"</span>,</span>
+<span id="cb25-2"><a href=""></a>             <span class="st">"DEU"</span>,<span class="st">"FIN"</span>,<span class="st">"POL"</span>,<span class="st">"ITA"</span>,<span class="st">"GBR"</span>)</span>
+<span id="cb25-3"><a href=""></a></span>
+<span id="cb25-4"><a href=""></a>specp <span class="ot">=</span> bvarGroupPriorPANEL<span class="sc">$</span><span class="fu">new</span>(</span>
+<span id="cb25-5"><a href=""></a>  ilo_dynamic_panel[c_select],</span>
+<span id="cb25-6"><a href=""></a>  <span class="at">exogenous =</span> ilo_exogenous_variables[c_select],</span>
+<span id="cb25-7"><a href=""></a>  <span class="at">group_allocation =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>)</span>
+<span id="cb25-8"><a href=""></a>)</span>
+<span id="cb25-9"><a href=""></a></span>
+<span id="cb25-10"><a href=""></a></span>
+<span id="cb25-11"><a href=""></a>burnp <span class="ot">=</span> <span class="fu">estimate</span>(specp, <span class="at">S =</span> <span class="dv">5000</span>, <span class="at">show_progress =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-12"><a href=""></a>postp <span class="ot">=</span> <span class="fu">estimate</span>(burnp, <span class="at">S =</span> <span class="dv">5000</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="missing-observations-1" class="slide level2" data-background-color="#FFD800">
+<h2>missing observations</h2>
+</section>
+<section id="missing-observations-2" class="slide level2" data-background-color="#FFD800">
+<h2>missing observations</h2>
+
+<img data-src="index_files/figure-revealjs/missingdata-1.png" width="960" class="r-stretch"></section>
+<section id="missing-observations-3" class="slide level2" data-background-color="#FFD800">
+<h2>missing observations</h2>
+<h3 style="color:#0056B9;" id="missing-observation-handling">missing observation handling</h3>
+<ul>
+<li>derived model-coherent joint density of missing observations <span class="math inline">\(\mathbf{y}_{c.m}\)</span> given observed data <span class="math inline">\(\mathbf{y}_{c.o}\)</span> and parameters <span class="math inline">\(\mathbf{A}_{c},\boldsymbol\Sigma_c\)</span></li>
+</ul>
+<p><span class="math display">\[\begin{align}
+        p\left(\mathbf{y}_{c.m}\mid \mathbf{y}_{c.o},\mathbf{A}_{c},\boldsymbol\Sigma_c\right)
+\end{align}\]</span></p>
+<ul>
+<li>based on model’s likelihood function</li>
+<li>sampled like other parameters during estimation</li>
+<li>parameter estimation and forecasting embed uncertainty about missing observations</li>
+</ul>
+</section>
+<section id="missing-observations-4" class="slide level2" data-background-color="#FFD800">
+<h2>missing observations</h2>
+<h3 style="color:#0056B9;" id="specify-and-estimate-the-model-1">specify and estimate the model</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href=""></a>c_select <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"UKR"</span>,<span class="st">"FRA"</span>,<span class="st">"ESP"</span>,<span class="st">"SWE"</span>,<span class="st">"NOR"</span>,</span>
+<span id="cb26-2"><a href=""></a>             <span class="st">"DEU"</span>,<span class="st">"FIN"</span>,<span class="st">"POL"</span>,<span class="st">"ITA"</span>,<span class="st">"GBR"</span>)</span>
+<span id="cb26-3"><a href=""></a></span>
+<span id="cb26-4"><a href=""></a>specm <span class="ot">=</span> specify_bvarPANEL<span class="sc">$</span><span class="fu">new</span>(</span>
+<span id="cb26-5"><a href=""></a>  ilo_dynamic_panel_missing[c_select],</span>
+<span id="cb26-6"><a href=""></a>)</span>
+<span id="cb26-7"><a href=""></a></span>
+<span id="cb26-8"><a href=""></a>burnm <span class="ot">=</span> <span class="fu">estimate</span>(specm, <span class="at">S =</span> <span class="dv">5000</span>, <span class="at">show_progress =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb26-9"><a href=""></a>postm <span class="ot">=</span> <span class="fu">estimate</span>(burnm, <span class="at">S =</span> <span class="dv">5000</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="forecasting" class="slide level2" data-background-color="#FFD800">
+<h2>forecasting</h2>
+</section>
+<section id="forecasting-1" class="slide level2" data-background-color="#FFD800">
+<h2>forecasting</h2>
+<h3 style="color:#0056B9;" id="forecasting-features">forecasting features</h3>
+<ul>
+<li>original non-stationary variables</li>
+<li>point and density forecasting</li>
+<li>forecasting for models with exogenous variables</li>
+<li>restricted forecasting of rates</li>
+<li>marginal forecasts of labour market indicators</li>
+<li>expanding-window recursive forecasting</li>
+<li>forecast performance evaluation</li>
+<li>forecast error variance decomposition</li>
+</ul>
+</section>
+<section id="forecasting-2" class="slide level2" data-background-color="#FFD800">
+<h2>forecasting</h2>
+<h3 style="color:#0056B9;" id="one-period-ahead-conditional-predictive-density">one-period-ahead conditional predictive density</h3>
+<p><span class="math display">\[\begin{align}
+&amp;\\
+        {\color{lig}p\left(\mathbf{y}_{c.t+1}\mid \mathbf{y}_{c.t},\mathbf{A}_{c},\boldsymbol\Sigma_c\right)} &amp; = N_4\left(\mathbf{A}_{c.1} \mathbf{y}_{c.t} + \mathbf{A}_{d.c}\mathbf{x}_{c.t+1}, \boldsymbol\Sigma_c\right)\\[5ex]
+\end{align}\]</span></p>
+<ul>
+<li>implied by the model</li>
+<li>equivalent to the frequentist predictive density</li>
+</ul>
+<h3 style="color:#0056B9;" id="joint-predictive-density">joint predictive density</h3>
+<p><span class="math display">\[\begin{align}
+        p\left(\mathbf{y}_{c.t+h},\dots,\mathbf{y}_{c.t+1}\mid \mathbf{Y}_{c.t}\right)
+        &amp;= \int p\left(\mathbf{y}_{c.t+h},\dots,\mathbf{y}_{c.t+1},\mathbf{A}_{c},\boldsymbol\Sigma_c\mid \mathbf{Y}_{c.t}\right)d\left(\mathbf{A}_{c},\boldsymbol\Sigma_c\right)
+\end{align}\]</span></p>
+<ul>
+<li>accounts for parameter uncertainty</li>
+<li>used to generate forecast summaries</li>
+</ul>
+</section>
+<section id="forecasting-3" class="slide level2" data-background-color="#FFD800">
+<h2>forecasting</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a>fore <span class="ot">=</span> <span class="fu">forecast</span>(</span>
+<span id="cb27-2"><a href=""></a>  post,</span>
+<span id="cb27-3"><a href=""></a>  <span class="at">horizon =</span> <span class="dv">3</span>,</span>
+<span id="cb27-4"><a href=""></a>  <span class="at">exogenous_forecast =</span> ilo_exogenous_forecasts,</span>
+<span id="cb27-5"><a href=""></a>) </span>
+<span id="cb27-6"><a href=""></a><span class="fu">plot</span>(fore, <span class="st">"UKR"</span>, <span class="at">main =</span> <span class="st">"Forecasts for Ukraine"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</div>
+<img data-src="index_files/figure-revealjs/for-1.png" width="960" class="r-stretch"></section>
+<section id="forecasting-4" class="slide level2" data-background-color="#FFD800">
+<h2>forecasting</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href=""></a><span class="fu">plot</span>(fore, <span class="st">"POL"</span>, <span class="at">main =</span> <span class="st">"Forecasts for Poland"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</div>
+<img data-src="index_files/figure-revealjs/forpol-1.png" width="960" class="r-stretch"></section>
+<section id="forecasting-5" class="slide level2" data-background-color="#FFD800">
+<h2>forecasting</h2>
+<h3 style="color:#0056B9;" id="one-period-ahead-conditional-predictive-density-1">one-period-ahead conditional predictive density</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a>ilo_dynamic_panel[c_select] <span class="sc">|&gt;</span> </span>
+<span id="cb29-2"><a href=""></a>  specify_bvarPANEL<span class="sc">$</span><span class="fu">new</span>(</span>
+<span id="cb29-3"><a href=""></a>    <span class="at">exogenous =</span> ilo_exogenous_variables[c_select],</span>
+<span id="cb29-4"><a href=""></a>    <span class="at">type =</span> <span class="fu">c</span>(<span class="st">"real"</span>,<span class="st">"rate"</span>,<span class="st">"rate"</span>,<span class="st">"rate"</span>)</span>
+<span id="cb29-5"><a href=""></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb29-6"><a href=""></a>  <span class="fu">estimate</span>(<span class="at">S =</span> <span class="dv">5000</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb29-7"><a href=""></a>  <span class="fu">estimate</span>(<span class="at">S =</span> <span class="dv">5000</span>) <span class="ot">-&gt;</span> post</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>**************************************************|
+bpvars: Forecasting with Bayesian Panel VARs      |
+**************************************************|
+ Progress of the MCMC simulation for 5000 draws
+    Every draw is saved via MCMC thinning
+ Press Esc to interrupt the computations
+**************************************************|
+**************************************************|
+bpvars: Forecasting with Bayesian Panel VARs      |
+**************************************************|
+ Progress of the MCMC simulation for 5000 draws
+    Every draw is saved via MCMC thinning
+ Press Esc to interrupt the computations
+**************************************************|</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a>post <span class="sc">|&gt;</span></span>
+<span id="cb31-2"><a href=""></a>  <span class="fu">forecast</span>(</span>
+<span id="cb31-3"><a href=""></a>    <span class="at">horizon =</span> <span class="dv">3</span>,</span>
+<span id="cb31-4"><a href=""></a>    <span class="at">exogenous_forecast =</span> ilo_exogenous_forecasts,</span>
+<span id="cb31-5"><a href=""></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb31-6"><a href=""></a>  <span class="fu">plot</span>(<span class="at">which_c =</span> <span class="st">"POL"</span>, <span class="at">main =</span> <span class="st">"Constrained forecasts for Poland"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</div>
+<img data-src="index_files/figure-revealjs/forpolc-1.png" width="960" class="r-stretch"></section>
 <section id="section-1" class="slide level2" data-background-color="#FFD800">
 <h2></h2>
 <p><img data-src="social.png" class="absolute" style="top: 30px; right: 90px; width: 900px; "></p>

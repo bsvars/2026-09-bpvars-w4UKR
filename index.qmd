@@ -321,7 +321,7 @@ c_select = c("UKR","FRA","ESP","SWE","NOR",
 
 spec = specify_bvarPANEL$new(
   ilo_dynamic_panel[c_select],
-  exogenous = ilo_exogenous_variables
+  exogenous = ilo_exogenous_variables[c_select],
 )
 
 burn = estimate(spec, S = 5000, show_progress = FALSE)
@@ -341,6 +341,37 @@ load("reproduction/bpvars_w4UKR1.rda")
 
 ## panel VARs {background-color="#FFD800"}
 
+### interpret estimates for $UR$ for UKR  {style="color:#0056B9;"}
+
+```{r}
+#| label: specsumm
+#| cache: true
+#| warning: false
+#| eval: true
+
+summ = summary(post)
+summ$UKR$A$equation2
+```
+
+
+
+
+
+
+## Exercise: panel VARs {background-color="#FFD800"}
+
+1. Run `?specify_bvarPANEL` to get help for the specification function
+2. What is the lag order in the estimated model?
+3. What does argument `stationary` set?
+4. What is the role of argument `exogenous`?
+5. Run `?ilo_exogenous_variables` to see what's in that data object.
+
+
+
+
+
+## panel VARs {background-color="#FFD800"}
+
 ### specify object{style="color:#0056B9;"}
 
 ```{r}
@@ -351,6 +382,23 @@ load("reproduction/bpvars_w4UKR1.rda")
 
 spec
 ```
+
+
+
+## panel VARs {background-color="#FFD800"}
+
+### specify object: exogenous variables for UKR {style="color:#0056B9;"}
+
+```{r}
+#| label: spec_exo
+#| cache: true
+#| warning: false
+#| eval: true
+
+ilo_exogenous_variables$UKR
+```
+
+
 
 
 ## panel VARs {background-color="#FFD800"}
@@ -370,9 +418,325 @@ spec$prior$M
 
 
 
+## panel VARs {background-color="#FFD800"}
+
+### featured models {style="color:#0056B9;"}
+
+- country-specific VARs with global prior
+- country-specific VARs with global prior by [Jarociński (2010, JAE)](https://doi.org/10.1002/jae.1082)
+- country-grouping VARs with global prior
+- country-specific VARs with global prior grouping
+- country-specific VARs
+
+### featured model specifications {style="color:#1A003F;"}
+
+- VAR lag order modification
+- exogenous variables
+- constrained forecasting of rates
+- prior hyper-parameters adjustment
+- global prior mean set to pooled estimator by [Zellner, Hong (1989, JOE)](https://doi.org/10.1016/0304-4076(89)90036-5)
 
 
 
+
+
+
+
+
+
+
+
+## panel VARs {background-color="#FFD800"}
+
+### model with country grouping {style="color:#0056B9;"}
+
+Let each country belong to a group $c\in g = \{1,\dots,G\}$.
+
+Country-specific parameters become group-specific parameters.
+
+\begin{align}
+&\\
+		\mathbf{y}_{c.t} &= \mathbf{A}_{g.1} \mathbf{y}_{c.t-1} + \mathbf{A}_{d.g}\mathbf{x}_{c.t} + \boldsymbol\epsilon_{c.t}\\[1ex]
+		\boldsymbol\epsilon_{c.t}\mid \mathbf{y}_{c.t-1} & \sim N_4\left(\mathbf{0}_4, \boldsymbol\Sigma_g\right)\\[1ex]
+		E_\pi\left[\mathbf{A}_{g}\right] &= \mathbf{A}\\[1ex]
+		E_\pi\left[\boldsymbol\Sigma_c\right] &= \boldsymbol\Sigma\\
+\end{align}		
+		
+
+## panel VARs {background-color="#FFD800"}
+
+### model with country grouping {style="color:#0056B9;"}
+
+```{r}
+#| label: specg
+#| cache: true
+#| warning: false
+#| eval: false
+
+c_select = c("UKR","FRA","ESP","SWE","NOR",
+             "DEU","FIN","POL","ITA","GBR")
+
+specg = bvarGroupPANEL$new(
+  ilo_dynamic_panel[c_select],
+  exogenous = ilo_exogenous_variables[c_select],
+  group_allocation = c(1,2,2,1,2,2,1,1,2,2)
+)
+
+
+burng = estimate(specg, S = 5000, show_progress = FALSE)
+postg = estimate(burng, S = 5000)
+```
+
+
+
+
+
+
+
+## panel VARs {background-color="#FFD800"}
+
+### model with global prior grouping {style="color:#0056B9;"}
+
+Let each country belong to a group $c\in g = \{1,\dots,G\}$.
+
+Country-specific parameters have group-specific prior mean.
+
+\begin{align}
+&\\
+		\mathbf{y}_{c.t} &= \mathbf{A}_{c.1} \mathbf{y}_{c.t-1} + \mathbf{A}_{d.c}\mathbf{x}_{c.t} + \boldsymbol\epsilon_{c.t}\\[1ex]
+		\boldsymbol\epsilon_{c.t}\mid \mathbf{y}_{c.t-1} & \sim N_4\left(\mathbf{0}_4, \boldsymbol\Sigma_c\right)\\[1ex]
+		E_\pi\left[\mathbf{A}_{c}\right] &= \mathbf{A}_g\\[1ex]
+		E_\pi\left[\boldsymbol\Sigma_c\right] &= \boldsymbol\Sigma_g\\
+\end{align}		
+		
+
+## panel VARs {background-color="#FFD800"}
+
+### model with global prior grouping {style="color:#0056B9;"}
+
+```{r}
+#| label: specgp
+#| cache: true
+#| warning: false
+#| eval: false
+
+c_select = c("UKR","FRA","ESP","SWE","NOR",
+             "DEU","FIN","POL","ITA","GBR")
+
+specp = bvarGroupPriorPANEL$new(
+  ilo_dynamic_panel[c_select],
+  exogenous = ilo_exogenous_variables[c_select],
+  group_allocation = c(1,2,2,1,2,2,1,1,2,2)
+)
+
+
+burnp = estimate(specp, S = 5000, show_progress = FALSE)
+postp = estimate(burnp, S = 5000)
+```
+
+
+
+
+
+
+
+
+## missing observations {background-color="#FFD800"}
+
+## missing observations {background-color="#FFD800"}
+
+```{r}
+#| label: missingdata
+#| cache: true
+#| warning: false
+#| message: false
+#| echo: false
+
+
+par(
+  mfrow = c(2, 2),
+  mar = c(0.5, 0.5, 0.5, 0.5),
+  oma = c(2, 2, 2, 2)
+)
+for (n in 1:4) {
+  range_i = range(sapply(1:C, \(i)(range(ilo_dynamic_panel[[i]][,n]))))
+  plot.ts(
+    ilo_dynamic_panel_missing[[id_usa]][,n],
+    ylim = range_i,
+    col = ligh,
+    lwd = 0.2,
+    axes = FALSE,
+    ylab = "",
+    xlab = ""
+  )
+  for (i in (1:C)[-id_usa]) {lines(ilo_dynamic_panel_missing[[i]][,n], col = ligh, lwd = 0.2)}
+  lines(ilo_dynamic_panel_missing[[id_pol]][,n], col = dark, lwd = 2)
+  if (n == 1) {
+    text(
+      time_id[4],
+      ilo_dynamic_panel[[id_pol]][34,n] + 1.5,
+      "UKR",
+      col = dark,
+      cex = 2
+    )
+  }
+  text(
+    time_id[31],
+    range_i[2] - 0.1 * diff(range_i),
+    var_names[n],
+    col = dark,
+    cex = 2
+  )
+  if (n == 3 || n == 4) {
+    axis(
+      1,
+      labels = c(NA, seq(from = 1995, to = 2020, by = 5), NA),
+      at = c(1991, seq(from = 1995, to = 2020, by = 5), 2024),
+    )
+  }
+}
+```
+
+
+
+
+
+
+## missing observations {background-color="#FFD800"}
+
+### missing observation handling {style="color:#0056B9;"}
+
+- derived model-coherent joint density of missing observations $\mathbf{y}_{c.m}$ given observed data $\mathbf{y}_{c.o}$ and parameters $\mathbf{A}_{c},\boldsymbol\Sigma_c$
+
+\begin{align}
+		p\left(\mathbf{y}_{c.m}\mid \mathbf{y}_{c.o},\mathbf{A}_{c},\boldsymbol\Sigma_c\right)
+\end{align}
+
+- based on model's likelihood function
+- sampled like other parameters during estimation
+- parameter estimation and forecasting embed uncertainty about missing observations
+
+
+
+## missing observations {background-color="#FFD800"}
+
+### specify and estimate the model  {style="color:#0056B9;"}
+
+```{r}
+#| label: specmiss
+#| cache: true
+#| warning: false
+#| eval: false
+
+c_select = c("UKR","FRA","ESP","SWE","NOR",
+             "DEU","FIN","POL","ITA","GBR")
+
+specm = specify_bvarPANEL$new(
+  ilo_dynamic_panel_missing[c_select],
+)
+
+burnm = estimate(specm, S = 5000, show_progress = FALSE)
+postm = estimate(burnm, S = 5000)
+```
+
+
+
+
+## forecasting {background-color="#FFD800"}
+
+## forecasting {background-color="#FFD800"}
+
+### forecasting features {style="color:#0056B9;"}
+
+- original non-stationary variables
+- point and density forecasting
+- forecasting for models with exogenous variables
+- restricted forecasting of rates
+- marginal forecasts of labour market indicators
+- expanding-window recursive forecasting
+- forecast performance evaluation 
+- forecast error variance decomposition
+
+
+
+
+
+## forecasting {background-color="#FFD800"}
+
+### one-period-ahead conditional predictive density {style="color:#0056B9;"}
+
+\begin{align}
+&\\
+		{\color{lig}p\left(\mathbf{y}_{c.t+1}\mid \mathbf{y}_{c.t},\mathbf{A}_{c},\boldsymbol\Sigma_c\right)} & = N_4\left(\mathbf{A}_{c.1} \mathbf{y}_{c.t} + \mathbf{A}_{d.c}\mathbf{x}_{c.t+1}, \boldsymbol\Sigma_c\right)\\[5ex]
+\end{align}
+		
+- implied by the model
+- equivalent to the frequentist predictive density
+
+### joint predictive density {style="color:#0056B9;"}
+
+\begin{align}
+		p\left(\mathbf{y}_{c.t+h},\dots,\mathbf{y}_{c.t+1}\mid \mathbf{Y}_{c.t}\right)
+		&= \int p\left(\mathbf{y}_{c.t+h},\dots,\mathbf{y}_{c.t+1},\mathbf{A}_{c},\boldsymbol\Sigma_c\mid \mathbf{Y}_{c.t}\right)d\left(\mathbf{A}_{c},\boldsymbol\Sigma_c\right)
+\end{align}
+
+- accounts for parameter uncertainty
+- used to generate forecast summaries
+
+
+
+
+## forecasting {background-color="#FFD800"}
+
+```{r}
+#| label: for
+#| cache: true
+#| warning: false
+
+fore = forecast(
+  post,
+  horizon = 3,
+  exogenous_forecast = ilo_exogenous_forecasts,
+) 
+plot(fore, "UKR", main = "Forecasts for Ukraine")
+```
+
+
+
+## forecasting {background-color="#FFD800"}
+
+```{r}
+#| label: forpol
+#| cache: true
+#| warning: false
+ 
+plot(fore, "POL", main = "Forecasts for Poland")
+```
+
+
+
+## forecasting {background-color="#FFD800"}
+
+### one-period-ahead conditional predictive density {style="color:#0056B9;"}
+```{r}
+#| label: forpolc
+#| cache: true
+#| warning: false
+
+ilo_dynamic_panel[c_select] |> 
+  specify_bvarPANEL$new(
+    exogenous = ilo_exogenous_variables[c_select],
+    type = c("real","rate","rate","rate")
+  ) |> 
+  estimate(S = 5000) |> 
+  estimate(S = 5000) -> post
+post |>
+  forecast(
+    horizon = 3,
+    exogenous_forecast = ilo_exogenous_forecasts,
+  ) |> 
+  plot(which_c = "POL", main = "Constrained forecasts for Poland")
+```
 
 
 
