@@ -20,19 +20,356 @@ execute:
 ![](bpvars_w4UKR.png){.absolute top=30 right=275 width="500"}
 
 
-##  {background-color="#FFD800"}
+
+
+## coming up next {background-color="#FFD800"}
 
 $$ $$
 
-### Structural Vector Autoregressions {style="color:#0056B9;"}
+### data preparation {style="color:#0056B9;"}
+### panel VARs {style="color:#0056B9;"}
+### estimation {style="color:#0056B9;"}
+### missing observations {style="color:#0056B9;"}
+### forecasting labour markets globally {style="color:#0056B9;"}
+### plotting and reporting forecasts {style="color:#0056B9;"}
+### forecasting performance evaluation {style="color:#0056B9;"}
 
-### Identification of Structural VARs {style="color:#0056B9;"}
+<!-- ### roadmap {style="color:#0056B9;"} -->
 
-### Dynamic Causal Effects {style="color:#0056B9;"}
 
-### Bayesian Estimation {style="color:#0056B9;"}
 
-### Monetary Policy Analysis Using the  [bsvars](https://cran.r-project.org/package=bsvars) Package {style="color:#0056B9;"}
+## materials {background-color="#FFD800"}
+
+$$ $$
+
+### Presentation Slides [as a website](http://bsvars.org/2026-09-bpvars-w4UKR/) {style="color:#0056B9;"}
+
+### GitHub [repo](https://github.com/bsvars/2026-09-bpvars-w4UKR) to reproduce the slides and results{style="color:#0056B9;"}
+
+### **bpvars** [website](https://bsvars.org/bpvars) and [CRAN](https://cran.r-project.org/package=bpvars) profile {style="color:#0056B9;"}
+
+### [vignette](https://doi.org/10.48550/arXiv.2606.14143), [tutorial](https://github.com/bsvars/2026-03-bpvars-ilo/blob/5be79db41ba1e6eaa8b5ded34482421c25b4c167/resources/ilo_tutorial.pdf) and [manual](https://cran.r-project.org/web/packages/bpvars/bpvars.pdf) {style="color:#0056B9;"}
+
+### [Recording](https://www.ilo.org/meetings-and-events/forecasting-labour-market-outcomes-using-bayesian-hierarchical-panel-vars) of presentation at the ILO {style="color:#0056B9;"}
+
+### [bsvars.org](https://bsvars.org/) website {style="color:#0056B9;"}
+
+
+
+
+
+
+## the R package [bpvars](https://bsvars.org/bpvars) {background-color="#FFD800"}
+
+- precise estimation and forecasting
+- simple workflows in **R**
+- excellent computational speed
+  - frontier econometric and numerical techniques
+  - algorithms written in **C++**
+- extensive documentation
+- meeting all CRAN standards
+- to install the package run
+```r
+install.packages("bpvars")
+```
+- upload it in **R** using
+```r
+library(bpvars)
+```
+
+
+
+
+
+## data preparation {background-color="#FFD800"}
+
+## data preparation {background-color="#FFD800"}
+
+- annual country-level time series
+- $\begin{bmatrix} gdp_{c.t} & UR_{c.t} & EPR_{c.t} & LFPR_{c.t} \end{bmatrix}$
+- sampling period 1991-2024
+- 189 countries 
+- 34.4% missing observations 
+- source: country statistics & ILO computations
+- original data can be downloaded using the [Rilostat](https://ilostat.github.io/Rilostat/) package
+- start with cubic dynamic panel data
+```{r}
+#| label: data_show
+#| cache: true
+#| warning: false
+#| message: false
+#| echo: true
+
+library(bpvars)
+data(ilo_dynamic_panel)
+```
+
+## data preparation {background-color="#FFD800"}
+
+```{r}
+#| label: data
+#| cache: true
+#| warning: false
+#| message: false
+#| echo: false
+
+library(bpvars)
+
+ligh = "#FFD800"
+# ligh = "#2A28C4"
+dark = "#0056B9"
+
+C = length(ilo_dynamic_panel)
+id_usa = which(names(ilo_dynamic_panel) == "USA")
+id_pol = which(names(ilo_dynamic_panel) == "UKR")
+time_id = zoo::index(ilo_dynamic_panel[[id_usa]])
+var_names = colnames(ilo_dynamic_panel[[id_usa]])
+
+par(
+  mfrow = c(2, 2),
+  mar = c(0.5, 0.5, 0.5, 0.5),
+  oma = c(2, 2, 2, 2)
+)
+for (n in 1:4) {
+  range_i = range(sapply(1:C, \(i)(range(ilo_dynamic_panel[[i]][,n]))))
+  plot.ts(
+    ilo_dynamic_panel[[id_usa]][,n], 
+    ylim = range_i, 
+    col = ligh, 
+    lwd = 0.2,
+    axes = FALSE,
+    ylab = "",
+    xlab = ""
+  )
+  for (i in (1:C)[-id_usa]) {lines(ilo_dynamic_panel[[i]][,n], col = ligh, lwd = 0.2)}
+  lines(ilo_dynamic_panel[[id_pol]][,n], col = dark, lwd = 2)
+  if (n == 1) {
+    text(
+      time_id[4],
+      ilo_dynamic_panel[[id_pol]][1,n] + 1,
+      "UKR",
+      col = dark,
+    cex = 2
+    )
+  }
+  text(
+    time_id[31],
+    range_i[2] - 0.1 * diff(range_i),
+    var_names[n],
+    col = dark,
+    cex = 2
+  )
+  if (n == 3 || n == 4) {
+    axis(
+      1,
+      labels = c(NA, seq(from = 1995, to = 2020, by = 5), NA),
+      at = c(1991, seq(from = 1995, to = 2020, by = 5), 2024),
+    )
+  }
+}
+```
+
+
+
+## data preparation {background-color="#FFD800"}
+
+```{r}
+#| label: data_inspect
+#| cache: true
+#| warning: false
+#| message: false
+#| echo: true
+
+class(ilo_dynamic_panel); length(ilo_dynamic_panel)
+names(ilo_dynamic_panel)[1:8]
+class(ilo_dynamic_panel$UKR)
+ilo_dynamic_panel$UKR
+```
+
+
+
+## data preparation {background-color="#FFD800"}
+
+### In this presentation, we use a 10-coutry dynamic panel {style="color:#0056B9;"}
+
+```{r}
+#| label: this_data
+#| cache: true
+#| warning: false
+
+c_select = c("UKR","FRA","ESP","SWE","NOR",
+             "DEU","FIN","POL","ITA","GBR")
+ilo_dynamic_panel[c_select]
+
+```
+
+
+
+
+## panel VARs {background-color="#FFD800"}
+
+## panel VARs {background-color="#FFD800"}
+
+### characterisation {style="color:#0056B9;"}
+
+- contemporary Bayesian modelling and institutional setup
+- incorporates best knowledge and practices
+- a balance between model size, flexibility, and its capacity to extract signal from data
+- highly computational, application-specific modelling
+- inspirations: UN, IPCC, ECB, FED, Christopher Sims
+
+
+
+
+
+## panel VARs {background-color="#FFD800"}
+
+### modelling features {style="color:#0056B9;"}
+
+- Bayesian nonstationary variables handling
+- system modelling
+- dynamic approach
+- <span style="color:#0056B9;">country-specific vector autoregression</span>
+- <span style="color:#0056B9;">global vector autoregression for prior mean</span>
+- hierarchical modelling
+- model-coherent missing observation handling
+- parameter grouping
+- parameter estimation risk accountability
+
+
+
+
+
+
+## panel VARs {background-color="#FFD800"}
+
+### country-specific vector autoregression  {style="color:#0056B9;"}
+
+\begin{align}
+&\\
+		\mathbf{y}_{c.t} &= \mathbf{A}_{c.1} \mathbf{y}_{c.t-1} + \mathbf{A}_{d.c}\mathbf{x}_{c.t} + \boldsymbol\epsilon_{c.t}\\[1ex]
+		\boldsymbol\epsilon_{c.t}\mid \mathbf{y}_{c.t-1} & \sim N_4\left(\mathbf{0}_4, \boldsymbol\Sigma_c\right)\\[2ex]
+\end{align}		
+		
+- subscript $c$ is for country, and $t$ is for time
+- captures country-specific dynamics, uncertainty and heterogeneity
+- parameters $\mathbf{A}_{c.1}$, $\mathbf{A}_{d.c}$ and $\boldsymbol\Sigma_c$ are estimated
+
+
+
+
+
+## panel VARs {background-color="#FFD800"}
+
+### global model for the prior mean  {style="color:#0056B9;"}
+
+- prior expectations are parameters
+
+\begin{align}
+		E_\pi\left[\mathbf{A}_{c}\right] &= \mathbf{A}, \qquad \mathbf{A}_{c} = \begin{bmatrix} \mathbf{A}_{c.1} & \mathbf{A}_{d.c} \end{bmatrix}'\\[1ex]
+		E_\pi\left[\boldsymbol\Sigma_c\right] &= \boldsymbol\Sigma\\
+\end{align}
+		
+- a global model under the prior mean
+
+\begin{align}
+		\mathbf{y}_{c.t} &= \mathbf{A}_{1} \mathbf{y}_{c.t-1} + \mathbf{A}_{d}\mathbf{x}_{c.t} + \boldsymbol\epsilon_{c.t}\\[1ex]
+		\boldsymbol\epsilon_{c.t}\mid \mathbf{y}_{c.t-1} & \sim N_4\left(\mathbf{0}_4, \boldsymbol\Sigma\right)
+\end{align}
+
+- parameters $\mathbf{A}_{1}$, $\mathbf{A}_{d}$ and $\boldsymbol\Sigma$ are estimated
+- panel data efficiency gains and interpretations
+
+
+
+
+## panel VARs {background-color="#FFD800"}
+
+### hierarchical prior distribution  {style="color:#0056B9;"}
+
+- country-specific parameters
+\begin{align}
+\mathbf{A}_c, \boldsymbol\Sigma_c | \mathbf{A}, \mathbf{V}, \mathbf{\Sigma}, \nu &\sim MNIW_{K\times N}\left(\mathbf{A}, \mathbf{V}, (N - \nu - 1)\mathbf{\Sigma}, \nu\right)\label{eq:csmnivprior}
+\end{align}
+
+- global parameters parameters
+\begin{align}
+\mathbf{A} \mid \mathbf{V}, m, s &\sim MN_{K\times N}\left(m\underline{\mathbf{M}}, \mathbf{V}, s\underline{\mathbf{S}}\right)\\
+\mathbf{\Sigma}\mid s, \mu &\sim W_{N}\left(s\underline{\mathbf{S}}_\Sigma,\mu\right)
+\end{align}
+
+- parameters $\mathbf{A}_c$, $\boldsymbol\Sigma_c$, $\mathbf{A}_c$, and $\boldsymbol\Sigma$ are estimated
+- $MNIW$ is a matrix-variate normal inverse Wishart distribution
+- $MN$ is a matrix-variate normal and $W$ a Wishart distribution
+
+
+
+
+
+## panel VARs {background-color="#FFD800"}
+
+### specify and estimate the model  {style="color:#0056B9;"}
+
+```{r}
+#| label: spec
+#| cache: true
+#| warning: false
+#| eval: false
+
+c_select = c("UKR","FRA","ESP","SWE","NOR",
+             "DEU","FIN","POL","ITA","GBR")
+
+spec = specify_bvarPANEL$new(
+  ilo_dynamic_panel[c_select],
+  exogenous = ilo_exogenous_variables
+)
+
+burn = estimate(spec, S = 5000, show_progress = FALSE)
+post = estimate(burn, S = 5000)
+```
+
+
+```{r}
+#| cache: true
+#| warning: false
+#| eval: true
+#| echo: false
+load("reproduction/bpvars_w4UKR1.rda")
+```
+
+
+
+## panel VARs {background-color="#FFD800"}
+
+### specify object{style="color:#0056B9;"}
+
+```{r}
+#| label: spec_out
+#| cache: true
+#| warning: false
+#| eval: true
+
+spec
+```
+
+
+## panel VARs {background-color="#FFD800"}
+
+### specify object: prior mean {style="color:#0056B9;"}
+
+```{r}
+#| label: spec_prior
+#| cache: true
+#| warning: false
+#| eval: true
+
+spec$prior$M
+```
+
+
+
+
+
 
 
 
@@ -40,6 +377,4 @@ $$ $$
 
 
 ##  {background-color="#FFD800"}
-
-![](social.png){.absolute top=30 right=200 width="800"}
-
+![](social.png){.absolute top=30 right=90 width="900"}

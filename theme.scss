@@ -1,3 +1,10 @@
 /*-- scss:defaults --*/
 
-$presentation-heading-color: #ff69b4 !default;
+
+$body-color: #0056B9;
+$presentation-heading-color: #0056B9;
+$code-block-font-size: 0.9em;
+
+.reveal .slides section h2 {
+  color: #0056B9;
+}
