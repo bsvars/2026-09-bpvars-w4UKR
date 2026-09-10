@@ -1134,48 +1134,89 @@ Frequency = 1
 <img data-src="index_files/figure-revealjs/for-1.png" width="960" class="r-stretch"></section>
 <section id="forecasting-4" class="slide level2" data-background-color="#FFD800">
 <h2>forecasting</h2>
+<ul>
+<li><span class="math inline">\(UR\)</span> forecasts for Poland are negative</li>
+</ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href=""></a><span class="fu">plot</span>(fore, <span class="st">"POL"</span>, <span class="at">main =</span> <span class="st">"Forecasts for Poland"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="index_files/figure-revealjs/forpol-1.png" width="960" class="r-stretch"></section>
-<section id="forecasting-5" class="slide level2" data-background-color="#FFD800">
-<h2>forecasting</h2>
-<h3 style="color:#0056B9;" id="one-period-ahead-conditional-predictive-density-1">one-period-ahead conditional predictive density</h3>
+<section id="constrained-forecasting" class="slide level2" data-background-color="#FFD800">
+<h2>constrained forecasting</h2>
+<ul>
+<li>argument <code>type</code> set to <code>"rate"</code> constraints the forecasts to <span class="math inline">\([0,100]\)</span></li>
+</ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a>ilo_dynamic_panel[c_select] <span class="sc">|&gt;</span> </span>
 <span id="cb29-2"><a href=""></a>  specify_bvarPANEL<span class="sc">$</span><span class="fu">new</span>(</span>
 <span id="cb29-3"><a href=""></a>    <span class="at">exogenous =</span> ilo_exogenous_variables[c_select],</span>
 <span id="cb29-4"><a href=""></a>    <span class="at">type =</span> <span class="fu">c</span>(<span class="st">"real"</span>,<span class="st">"rate"</span>,<span class="st">"rate"</span>,<span class="st">"rate"</span>)</span>
 <span id="cb29-5"><a href=""></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb29-6"><a href=""></a>  <span class="fu">estimate</span>(<span class="at">S =</span> <span class="dv">5000</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb29-7"><a href=""></a>  <span class="fu">estimate</span>(<span class="at">S =</span> <span class="dv">5000</span>) <span class="ot">-&gt;</span> post</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>**************************************************|
-bpvars: Forecasting with Bayesian Panel VARs      |
-**************************************************|
- Progress of the MCMC simulation for 5000 draws
-    Every draw is saved via MCMC thinning
- Press Esc to interrupt the computations
-**************************************************|
-**************************************************|
-bpvars: Forecasting with Bayesian Panel VARs      |
-**************************************************|
- Progress of the MCMC simulation for 5000 draws
-    Every draw is saved via MCMC thinning
- Press Esc to interrupt the computations
-**************************************************|</code></pre>
+<span id="cb29-6"><a href=""></a>  <span class="fu">estimate</span>(<span class="at">S =</span> <span class="dv">5000</span>, <span class="at">show_progress =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb29-7"><a href=""></a>  <span class="fu">estimate</span>(<span class="at">S =</span> <span class="dv">5000</span>, <span class="at">show_progress =</span> <span class="cn">FALSE</span>) <span class="ot">-&gt;</span> post</span>
+<span id="cb29-8"><a href=""></a></span>
+<span id="cb29-9"><a href=""></a>post <span class="sc">|&gt;</span></span>
+<span id="cb29-10"><a href=""></a>  <span class="fu">forecast</span>(</span>
+<span id="cb29-11"><a href=""></a>    <span class="at">horizon =</span> <span class="dv">3</span>,</span>
+<span id="cb29-12"><a href=""></a>    <span class="at">exogenous_forecast =</span> ilo_exogenous_forecasts,</span>
+<span id="cb29-13"><a href=""></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb29-14"><a href=""></a>  <span class="fu">plot</span>(<span class="at">which_c =</span> <span class="st">"POL"</span>, <span class="at">main =</span> <span class="st">"Constrained forecasts for Poland"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a>post <span class="sc">|&gt;</span></span>
-<span id="cb31-2"><a href=""></a>  <span class="fu">forecast</span>(</span>
-<span id="cb31-3"><a href=""></a>    <span class="at">horizon =</span> <span class="dv">3</span>,</span>
-<span id="cb31-4"><a href=""></a>    <span class="at">exogenous_forecast =</span> ilo_exogenous_forecasts,</span>
-<span id="cb31-5"><a href=""></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb31-6"><a href=""></a>  <span class="fu">plot</span>(<span class="at">which_c =</span> <span class="st">"POL"</span>, <span class="at">main =</span> <span class="st">"Constrained forecasts for Poland"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
+</section>
+<section id="constrained-forecasting-output" class="slide level2 output-location-slide"><h2>constrained forecasting</h2><div class="cell output-location-slide">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/forpolc-1.png" width="960"></p>
+</figure>
 </div>
-<img data-src="index_files/figure-revealjs/forpolc-1.png" width="960" class="r-stretch"></section>
-<section id="section-1" class="slide level2" data-background-color="#FFD800">
+</div>
+</div></section><section id="conditional-forecasting" class="slide level2" data-background-color="#FFD800">
+<h2>conditional forecasting</h2>
+<ul>
+<li>forecast labour markets given the future path of <span class="math inline">\(gdp\)</span></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href=""></a>ilo_conditional_forecasts<span class="sc">$</span>UKR</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Time Series:
+Start = 2025 
+End = 2027 
+Frequency = 1 
+          gdp UR EPR LFPR
+2025 25.10654 NA  NA   NA
+2026 25.15050 NA  NA   NA
+2027 25.19719 NA  NA   NA</code></pre>
+</div>
+</div>
+</section>
+<section id="conditional-forecasting-1" class="slide level2" data-background-color="#FFD800">
+<h2>conditional forecasting</h2>
+<ul>
+<li>forecast labour markets given the future path of <span class="math inline">\(gdp\)</span></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href=""></a>post <span class="sc">|&gt;</span></span>
+<span id="cb32-2"><a href=""></a>  <span class="fu">forecast</span>(</span>
+<span id="cb32-3"><a href=""></a>    <span class="at">horizon =</span> <span class="dv">3</span>,</span>
+<span id="cb32-4"><a href=""></a>    <span class="at">exogenous_forecast =</span> ilo_exogenous_forecasts,</span>
+<span id="cb32-5"><a href=""></a>    <span class="at">conditional_forecast =</span> ilo_conditional_forecasts[c_select]</span>
+<span id="cb32-6"><a href=""></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb32-7"><a href=""></a>  <span class="fu">plot</span>(<span class="at">which_c =</span> <span class="st">"POL"</span>, <span class="at">main =</span> <span class="st">"Conditional forecasts for Poland"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+</section>
+<section id="conditional-forecasting-1-output" class="slide level2 output-location-slide"><h2>conditional forecasting</h2><div class="cell output-location-slide">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/forpolcond-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div></section><section id="section-1" class="slide level2" data-background-color="#FFD800">
 <h2></h2>
 <p><img data-src="social.png" class="absolute" style="top: 30px; right: 90px; width: 900px; "></p>
 
