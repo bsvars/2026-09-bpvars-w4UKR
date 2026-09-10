@@ -20,14 +20,25 @@ spec = specify_bvarPANEL$new(                           # specify the model
 burn = estimate(spec, S = 5000, show_progress = FALSE) # run the burn-in
 post = estimate(burn, S = 5000)                        # estimate the model
 
+summ = summary(post)
+summ$UKR$A$equation2
+
 # forecast
 fore = forecast(                                    # forecast the model
   post,                                             # estimation output
   horizon = 3,                                      # forecast horizon
   exogenous_forecast = ilo_exogenous_forecasts,     # forecasts for exogenous variables
 ) 
-plot(fore, "UKR", main = "Forecasts for Ukraine")  # plot the forecasts
+plot(fore, "UKR", main = "Forecasts for Ukraine")   # plot the forecasts
+sumf = summary(fore, "UKR")
+sumf$`variable 2`
 
+post |>                                              # estimation output
+  compute_variance_decompositions(horizon = 3) |>    # compute variance decompositions
+  plot(which_c = "UKR")                              # plot variance decompositions 
+
+
+plot(fore, "POL", main = "Forecasts for Poland")    # plot the forecasts
 
 # safe the output
 save(

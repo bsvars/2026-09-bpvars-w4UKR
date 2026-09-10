@@ -327,6 +327,10 @@ spec = specify_bvarPANEL$new(
 burn = estimate(spec, S = 5000, show_progress = FALSE)
 post = estimate(burn, S = 5000)
 ```
+::: footer
+[reproduction file 1](https://github.com/bsvars/2026-09-bpvars-w4UKR/blob/master/reproduction/bpvars_w4UKR1.R)
+:::
+
 
 
 ```{r}
@@ -352,6 +356,9 @@ load("reproduction/bpvars_w4UKR1.rda")
 summ = summary(post)
 summ$UKR$A$equation2
 ```
+::: footer
+[reproduction file 1](https://github.com/bsvars/2026-09-bpvars-w4UKR/blob/master/reproduction/bpvars_w4UKR1.R)
+:::
 
 
 
@@ -486,6 +493,9 @@ specg = bvarGroupPANEL$new(
 burng = estimate(specg, S = 5000, show_progress = FALSE)
 postg = estimate(burng, S = 5000)
 ```
+::: footer
+[reproduction file 2](https://github.com/bsvars/2026-09-bpvars-w4UKR/blob/master/reproduction/bpvars_w4UKR2.R)
+:::
 
 
 
@@ -533,6 +543,9 @@ specp = bvarGroupPriorPANEL$new(
 burnp = estimate(specp, S = 5000, show_progress = FALSE)
 postp = estimate(burnp, S = 5000)
 ```
+::: footer
+[reproduction file 3](https://github.com/bsvars/2026-09-bpvars-w4UKR/blob/master/reproduction/bpvars_w4UKR3.R)
+:::
 
 
 
@@ -638,6 +651,9 @@ specm = specify_bvarPANEL$new(
 burnm = estimate(specm, S = 5000, show_progress = FALSE)
 postm = estimate(burnm, S = 5000)
 ```
+::: footer
+[reproduction file 4](https://github.com/bsvars/2026-09-bpvars-w4UKR/blob/master/reproduction/bpvars_w4UKR4.R)
+:::
 
 
 
@@ -700,6 +716,57 @@ fore = forecast(
 ) 
 plot(fore, "UKR", main = "Forecasts for Ukraine")
 ```
+::: footer
+[reproduction file 1](https://github.com/bsvars/2026-09-bpvars-w4UKR/blob/master/reproduction/bpvars_w4UKR1.R)
+:::
+
+
+
+
+## forecasting {background-color="#FFD800"}
+
+### summary of $UR$ forecasts for Ukraine {style="color:#0056B9;"}
+```{r}
+#| label: forsf
+#| cache: true
+#| warning: false
+
+sumf = summary(fore, "UKR")
+sumf$`variable 2`
+```
+::: footer
+[reproduction file 1](https://github.com/bsvars/2026-09-bpvars-w4UKR/blob/master/reproduction/bpvars_w4UKR1.R)
+:::
+
+
+
+
+
+
+## forecasting {background-color="#FFD800"}
+
+### forecast error variance decomposition {style="color:#0056B9;"}
+```{r}
+#| label: fevd
+#| cache: true
+#| warning: false
+
+post |>
+  compute_variance_decompositions(horizon = 3) |>
+  plot(which_c = "UKR")
+```
+::: footer
+[reproduction file 1](https://github.com/bsvars/2026-09-bpvars-w4UKR/blob/master/reproduction/bpvars_w4UKR1.R)
+:::
+
+
+
+
+
+
+
+
+
 
 
 
@@ -714,7 +781,9 @@ plot(fore, "UKR", main = "Forecasts for Ukraine")
  
 plot(fore, "POL", main = "Forecasts for Poland")
 ```
-
+::: footer
+[reproduction file 1](https://github.com/bsvars/2026-09-bpvars-w4UKR/blob/master/reproduction/bpvars_w4UKR1.R)
+:::
 
 
 ## constrained forecasting {background-color="#FFD800"}
@@ -742,13 +811,17 @@ post |>
   ) |> 
   plot(which_c = "POL", main = "Constrained forecasts for Poland")
 ```
+::: footer
+[reproduction file 5](https://github.com/bsvars/2026-09-bpvars-w4UKR/blob/master/reproduction/bpvars_w4UKR5.R)
+:::
+
 
 
 
 
 ## conditional forecasting {background-color="#FFD800"}
 
-- forecast labour markets given the future path of $gdp$
+### forecast labour markets given the path for $gdp$ {style="color:#0056B9;"}
 
 ```{r}
 #| label: forpolconds
@@ -757,12 +830,15 @@ post |>
 
 ilo_conditional_forecasts$UKR
 ```
+::: footer
+[reproduction file 5](https://github.com/bsvars/2026-09-bpvars-w4UKR/blob/master/reproduction/bpvars_w4UKR5.R)
+:::
 
 
 
 ## conditional forecasting {background-color="#FFD800"}
 
-- forecast labour markets given the future path of $gdp$
+### forecast labour markets given the path for $gdp$ {style="color:#0056B9;"}
 
 ```{r}
 #| label: forpolcond
@@ -778,12 +854,40 @@ post |>
   ) |> 
   plot(which_c = "UKR", main = "Conditional forecasts for Ukraine")
 ```
+::: footer
+[reproduction file 5](https://github.com/bsvars/2026-09-bpvars-w4UKR/blob/master/reproduction/bpvars_w4UKR5.R)
+:::
 
 
 
+## forecasting labour markets globally {background-color="#FFD800"}
 
 
+```{r}
+#| label: glob
+#| cache: true
+#| warning: false
+#| eval: false
 
+spec = specify_bvarPANEL$new(
+  ilo_dynamic_panel,
+  exogenous = ilo_exogenous_variables,
+)
+
+burn = estimate(spec, S = 5000)
+post = estimate(burn, S = 5000)
+
+fore = forecast(
+  horizon = 3,
+  exogenous_forecast = ilo_exogenous_forecasts,
+  conditional_forecast = ilo_conditional_forecasts
+)
+
+plot(fore, which_c = "UKR", main = "Conditional forecasts for Ukraine")
+```
+::: footer
+[reproduction file 6](https://github.com/bsvars/2026-09-bpvars-w4UKR/blob/master/reproduction/bpvars_w4UKR6.R)
+:::
 
 
 
