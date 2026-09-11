@@ -5,7 +5,7 @@ library(bpvars)
 c_select = c("UKR","FRA","ESP","SWE","NOR",
              "DEU","FIN","POL","ITA","GBR")
 
-specg = bvarGroupPriorPANEL$new(
+specg = specify_bvarGroupPriorPANEL$new(
   ilo_dynamic_panel[c_select],
   exogenous = ilo_exogenous_variables[c_select],
   group_allocation = c(1,2,2,1,2,2,1,1,2,2)

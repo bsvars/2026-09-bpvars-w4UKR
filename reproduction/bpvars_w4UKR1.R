@@ -20,8 +20,13 @@ spec = specify_bvarPANEL$new(                           # specify the model
 burn = estimate(spec, S = 5000, show_progress = FALSE) # run the burn-in
 post = estimate(burn, S = 5000)                        # estimate the model
 
+# understand estimation output
 summ = summary(post)
 summ$UKR$A$equation2
+
+class(post$posterior$A_c) 
+dim(post$posterior$A_c) 
+apply(post$posterior$A_c[,,1,], 1:2, median) 
 
 # forecast
 fore = forecast(                                    # forecast the model

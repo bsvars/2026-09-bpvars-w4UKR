@@ -13,9 +13,9 @@ post = estimate(burn, S = 5000)
 
 # forecasting
 fore = forecast(
+  post,
   horizon = 3,
-  exogenous_forecast = ilo_exogenous_forecasts,
-  conditional_forecast = ilo_conditional_forecasts
+  exogenous_forecast = ilo_exogenous_forecasts
 )
 
 plot(fore, which_c = "UKR", main = "Conditional forecasts for Ukraine")
